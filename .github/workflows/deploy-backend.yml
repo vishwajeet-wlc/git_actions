@@ -1,8 +1,6 @@
 name: Deploy Express API
 on:
   push:
-    paths:
-      - '/'
     branches: [ master ]
 
 jobs:
@@ -22,5 +20,5 @@ jobs:
             cd ~/app/backend || git clone https://github.com/${{ github.repository }} backend && cd backend
             git pull origin master
             npm ci
-            pm2 restart express-api || pm2 start index.js --name express-api
+            pm2 restart express-api || pm2 start app.js --name express-api
           EOF
