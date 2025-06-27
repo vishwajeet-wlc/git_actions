@@ -2,7 +2,7 @@ name: Deploy Express API
 on:
   push:
     paths:
-      - 'backend/**'
+      - '/'
     branches: [ master ]
 
 jobs:
