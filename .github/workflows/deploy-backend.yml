@@ -1,0 +1,26 @@
+name: Deploy Express API
+on:
+  push:
+    paths:
+      - 'backend/**'
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Decode SSH key
+        run: |
+          echo "${{ secrets.TRACKIFY_DEMO_SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+
+      - name: Deploy via SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd ~/app/backend || git clone https://github.com/${{ github.repository }} backend && cd backend
+            git pull origin master
+            npm ci
+            pm2 restart express-api || pm2 start index.js --name express-api
+          EOF
