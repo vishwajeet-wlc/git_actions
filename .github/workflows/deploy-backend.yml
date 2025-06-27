@@ -17,7 +17,7 @@ jobs:
       - name: Deploy via SSH
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            git clone https://github.com/${{ github.repository }} backend && cd backend
+            git clone https://github.com/${{ github.repository }} demo && cd demo
             git pull origin master
             npm ci
             pm2 restart express-api || pm2 start app.js --name express-api
