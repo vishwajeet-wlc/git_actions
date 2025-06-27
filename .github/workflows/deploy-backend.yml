@@ -17,6 +17,7 @@ jobs:
       - name: Deploy via SSH
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            sudo su
             git clone https://github.com/${{ github.repository }} demo && cd demo
             git pull origin master
             npm ci
