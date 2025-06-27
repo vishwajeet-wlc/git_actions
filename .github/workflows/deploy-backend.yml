@@ -18,7 +18,7 @@ jobs:
         run: |
             ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
               # Ensure Node and pm2 are in PATH
-              export PATH=$PATH:/usr/local/bin:/usr/bin
+              export PATH=$PATH:/home/ubuntu/.nvm/versions/node/v20.19.3/bin:/usr/local/bin:/usr/bin
               # If demo does not exist, clone it
               if [ ! -d ~/demo ]; then
                 git clone https://github.com/${{ github.repository }} ~/demo
