@@ -16,10 +16,22 @@ jobs:
 
       - name: Deploy via SSH
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            sudo su
-            git clone https://github.com/${{ github.repository }} demo && cd demo
-            git pull origin master
-            npm ci
-            pm2 restart express-api || pm2 start app.js --name express-api
-          EOF
+            ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+              # Ensure Node and pm2 are in PATH
+              export PATH=$PATH:/usr/local/bin:/usr/bin
+              # If demo does not exist, clone it
+              if [ ! -d ~/demo ]; then
+                git clone https://github.com/${{ github.repository }} ~/demo
+              fi
+              cd ~/demo
+              # If not a git repo, remove and clone fresh
+              if [ ! -d .git ]; then
+                cd ~
+                rm -rf ~/demo
+                git clone https://github.com/${{ github.repository }} ~/demo
+                cd ~/demo
+              fi
+              git pull origin master
+              npm ci
+              pm2 restart express-api || pm2 start app.js --name express-api
+            EOF
